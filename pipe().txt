@@ -1,0 +1,24 @@
+Write a program in c to write and read a message using pipe().
+
+
+#include <stdio.h>
+#include <unistd.h>
+int main()
+{
+int fds[2];
+int status;
+char writemsg[30]={"Hello,My name is Aditi"};
+char readmsg[30];
+status = pipe(fds);
+if (status == -1)
+{
+printf("Unable to create pipe\n");
+return 1;
+}
+printf("Writing to pipe:%s\n", writemsg);
+write(fds[1], writemsg, sizeof(writemsg));
+read(fds[0], readmsg, sizeof(readmsg));
+printf("Reading from pipe:%s\n", readmsg);
+return 0;
+}
+
