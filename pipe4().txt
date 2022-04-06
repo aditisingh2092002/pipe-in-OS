@@ -1,0 +1,39 @@
+Write a program in C to write and read two messages through pipe()
+using the parent and child process where child process write message
+into pipe and parent process retrieve and display message.
+
+#include <stdio.h>
+#include <unistd.h>
+
+int main()
+{
+    int fds[2];
+    int status;
+    char writemsg[10][20]={"hello","welcome"};
+    char readmsg[20];
+    status=pipe(fds);
+   
+    if(status==-1)
+    {
+        printf("unable to create pipe");
+        return 1;
+    }
+    int pid=fork();
+    if(pid==0)
+    {
+        printf("Child process--writing to pipe--message1:%s\n",writemsg[0]);
+        write(fds[1],writemsg[0],sizeof(writemsg[0]));
+        printf("Child process--writing to pipe--message2:%s\n",writemsg[1]);
+        write(fds[1],writemsg[1],sizeof(writemsg[1]));
+    }
+    else
+    {
+        read(fds[0],readmsg, sizeof(readmsg));
+        printf("Parent process--reading from pipe--message1:%s\n",readmsg);
+       
+        read(fds[0],readmsg, sizeof(readmsg));
+        printf("Parent process--reading from pipe--message2:%s\n", readmsg);  
+    }
+
+    return 0;
+}
